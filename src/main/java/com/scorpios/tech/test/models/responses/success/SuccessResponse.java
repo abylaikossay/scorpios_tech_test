@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuccessResponse {
-    @JsonProperty("data")
-    private Object data;
+    @JsonProperty("answer")
+    private Object answer;
 
     @JsonProperty("message")
     private String message;

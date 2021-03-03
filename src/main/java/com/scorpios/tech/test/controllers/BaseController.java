@@ -23,7 +23,7 @@ public class BaseController {
 
     protected ResponseEntity<?> buildSuccess(String message, Object data) {
         return new ResponseEntity<>(SuccessResponse.builder().message(message)
-                .data(data)
+                .answer(data)
                 .build(), HttpStatus.OK);
     }
 
