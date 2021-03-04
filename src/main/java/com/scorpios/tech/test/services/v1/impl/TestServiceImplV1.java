@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -154,14 +154,76 @@ public class TestServiceImplV1 implements TestServiceV1 {
     @Override
     public String task6(MultipartFile multipartFile) throws IOException {
         String content = this.fileText(multipartFile);
-        return content;
+        int number = Integer.parseInt(content);
+        if (isTwoFold(number)) {
+            return String.valueOf(number);
+        }
+        int asc = number;
+        int desc = number;
+        while (true) {
+            asc++;
+            desc--;
+            if (isTwoFold(asc)) {
+                return String.valueOf(asc);
+            }
+            if (isTwoFold(desc)) {
+                return String.valueOf(desc);
+            }
+        }
+    }
+    //task 6 funct
+    private boolean isTwoFold(int number) {
+        Integer firstDigit = null;
+        Integer secondDigit = null;
+        while (number > 0) {
+            int currentDigit = number % 10;
+            number /= 10;
+
+            if (firstDigit == null) {
+                firstDigit = currentDigit;
+                continue;
+            } else if (firstDigit == currentDigit) {
+                continue;
+            }
+            if (secondDigit == null) {
+                secondDigit = currentDigit;
+            } else if (secondDigit != currentDigit) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public String task7(MultipartFile multipartFile) throws IOException {
         String content = this.fileText(multipartFile);
-        return content;
+        String answer = "";
+        int number = Integer.valueOf(content);
+        if (number < 2 || number > 40) {
+            throw ServiceException.builder()
+                    .message("Число меньше 2 или больше 40")
+                    .errorCode(ErrorCode.INVALID_NUMBER)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+        }
+        int length = number;
+        List<Integer> numberList = new ArrayList<>();
+        for (int i = 0; i < number; i++) {
+            numberList.add(1);
+        }
+        answer = numberList.stream().map(String::valueOf)
+                .collect(Collectors.joining("+"));
+        answer = answer + System.lineSeparator() + "1+1+2";
+        System.out.println("ANSWER " + answer);
+//        do {
+//            length = findLength(numberList, length);
+//        } while (length > 1);
+        return answer;
     }
+    private int findLength(List<Integer> numberS, int length) {
+        return 1;
+    }
+
 
     @Override
     public String task8(MultipartFile multipartFile) throws IOException {
@@ -190,7 +252,24 @@ public class TestServiceImplV1 implements TestServiceV1 {
     @Override
     public String task12(MultipartFile multipartFile) throws IOException {
         String content = this.fileText(multipartFile);
-        return content;
+        int amount = Integer.parseInt(content);
+        switch (amount) {
+            case 0:
+            case 1:
+                return "0";
+            case 2:
+                return "1";
+            case 3:
+                return "2";
+        }
+        long combinations = 2;
+        long repeatComb = 3;
+        for (int i = Math.toIntExact(repeatComb); i < amount; i++) {
+            long noRepeatComb = repeatComb * i;
+            repeatComb = noRepeatComb + combinations;
+            combinations = noRepeatComb;
+        }
+        return String.valueOf(combinations);
     }
 
     private String fileText(MultipartFile multipartFile) throws IOException {
